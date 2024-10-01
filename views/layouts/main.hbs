@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset='utf-8'>
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <title>Ecopension</title>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+    
+    <link rel="shortcut icon" type="image/x-icon" href="media/guardlogos.png" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" />
+    <link rel="stylesheet" href="https://cdn.datatables.net/2.0.8/css/dataTables.bootstrap5.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/responsive/3.0.2/css/responsive.bootstrap5.css">
+    <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11.10.8/dist/sweetalert2.min.css" rel="stylesheet">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.7.7/css/bootstrap-select.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/3.1.0/css/buttons.dataTables.css">
+
+    <link rel='stylesheet' type='text/css' media='screen' href='css/main.css'>
+    <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+    <script src="https://cdn.datatables.net/2.0.8/js/dataTables.js"></script>
+    <script src="https://cdn.datatables.net/2.0.8/js/dataTables.bootstrap5.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+        <script src="https://cdn.jsdelivr.net/npm/moment@2.29.1/moment.min.js"></script>
+    <!-- Load Chart.js Moment.js adapter -->
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-moment@1.0.0"></script>
+
+    <script src="https://cdn.datatables.net/buttons/3.1.0/js/dataTables.buttons.js"></script>
+    <script src="https://cdn.datatables.net/buttons/3.1.0/js/buttons.dataTables.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
+    <script src="https://cdn.datatables.net/buttons/3.1.0/js/buttons.html5.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/3.1.0/js/buttons.print.min.js"></script>
+
+</head>
+
+<body>
+    <div class="body-content" id="body-content">
+        {{>navbar}}
+        <div class="body-cont">
+            <div class="sidebar">
+                <div class="row">
+                    <div class="image-">
+                        {{!-- <img class="imglog" src="media/guardlogos.png" alt=""> --}}
+                        <div class="imgtext">
+                            <p>ecopension</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="row" style="margin-right: 0;">
+                    <div class="ul-content" id="user_url_side">
+                        <ul>
+                            <p class="side_p homet">Account Actions</p>
+                            <li class="side_li1"><i class="fa-solid fa-house"></i><p>Home</p></li>
+                            <li class="side_li2" id="side_li2"><i class="fa-solid fa-user-xmark"></i><p>Delete Accounts</p></li>
+                            <li class="side_li3"  id="side_li3"><i class="fa-solid fa-spinner"></i><p>Reset Accounts</p></li>
+                            <li class="side_li4"  id="side_li4"><i class="fa-solid fa-circle-info"></i><p>Get Account Info</p></li>
+                            <p class="side_p onboardt" style="padding-top: 20px;">Onboarding account</p>
+                            <li class="side_li4" id="side_li4"><i class="fa-solid fa-file-export"></i><p>Onboarding</p></li>
+                            <p class="side_p koopt" style="padding-top: 20px;">GL Transfer Values </p>
+                            <li class="side_li5"><i class="fa-solid fa-file-export"></i><p>Upload list</p></li>
+                            {{!-- <p class="side_p" style="padding-top: 20px;">Get user information</p>
+                            <li class="side_li5"><i class="fa-regular fa-solid fa-chart-bar"></i><p>Wn status</p></li> --}}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            {{{body}}}
+        </div>
+    </div>
+
+    </div>
+</body>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.10.8/dist/sweetalert2.all.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/js/fontawesome.min.js"></script>
+
+<script src='js/main.js'></script>
+
+</html>

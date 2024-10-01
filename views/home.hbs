@@ -1,0 +1,76 @@
+<script src="./js/ecohome.js"></script>
+<div class="content">
+    <header class="header">
+        <p class="hp">Ecopension / Home page</p>
+        <p class="hp1">Welcome to ecopension</p>
+        {{!-- <h1 class="header_t">Pension Web-Portal</h1> --}}
+    </header>
+    <div class="eco_content" id="eco_content">
+    <div class="info_contents">
+        <div class="row">
+            <div class="col-lg-4">
+                <div class="card" style="width: 19rem;">
+                    <div class="card-body" style="padding: 30px !important;">
+                        <div class="card_content">
+                            <h1 id="wn"></h1>
+                            <p>Number of wn contracts</p>
+                            <h5>WN Contracts</h5>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="card" style="width: 19rem;">
+                    <div class="card-body" style="padding: 30px !important;">
+                        <div class="card_content">
+                            <h1 id="wg"></h1>
+                            <p>Number of wg contracts</p>
+                            <h5>WG Contracts</h5>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {{!-- <div class="col-lg-3">
+                <div class="card" style="width: 19rem;">
+                    <div class="card-body" style="padding: 30px !important;">
+                        <div class="card_content">
+                            <h1 id="wnwg"></h1>
+                            <p>Number of active members</p>
+                            <h5>Active Members</h5>
+                        </div>
+                    </div>
+                </div>
+            </div> --}}
+        </div>
+    </div>
+    <div class="table_content">
+        <div class="card">
+            <div class="card-body">
+                <div class="table-responsive">
+                <table class="table table-bordered table-hover dt-responsive homt_tb" id="tbl_eco_user"
+                    style="width: 100%;">
+                    <thead class="table_h">
+                        <tr>
+                            <th>MBR_NO</th>
+                            <th>CASE_MBR_KEY</th>
+                            <th>NAMEID</th>
+                            <th>NATLIDNO</th>
+                            <th>FIRSTNAME</th>
+                            <th>LASTNAME</th>
+                            <th>EXTD_MBR_STATUS</th>
+                            <th>ORG_NAMEID</th>
+                        </tr>
+                    </thead>
+                </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+    <div class="info_loader" id="info_loader">
+    <div class="loader-0">
+        <div class="loader-03"></div>
+    </div>
+</div>
+</div>
+
