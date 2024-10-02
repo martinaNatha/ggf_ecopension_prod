@@ -1,5 +1,5 @@
 {
-  "name": "pension_portal_web_internal",
+  "name": "ggf_ecopension_prod",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -28,9 +28,10 @@
     "multer": "^1.4.5-lts.1",
     "mysql": "^2.18.1",
     "mysql2": "^3.11.0",
+    "node-fetch": "^3.3.2",
     "node-rest-client": "^3.1.1",
     "nodemailer": "^6.9.14",
-    "nodemon": "^3.1.4",
+    "nodemon": "^3.1.7",
     "not": "^0.1.0",
     "odbc": "^2.4.9",
     "passport": "^0.7.0",

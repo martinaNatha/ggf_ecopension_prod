@@ -744,7 +744,9 @@ app.post("/get_info_from_compass", async (req, res) => {
       //   query: "SELECT * FROM PORTAL.PTL_ORGANIZATIONS ORG",
       // });
       const resultcomp = await axios.post(process.env.API_PRD, {
-        query: "SELECT casd.cont_no,casd.plan_nm, casd.pr_case_no relnr, fls_fatum.get_scheme_planType(casd.cont_no) PlanType, fls_fatum.get_scheme_status(casd.cont_no) scheme_status, fls_fatum.get_scheme_branche(casd.case_key, sysdate) branche from case_data casd,case_statuses csst where 1=1 AND csst.eff_dt <= sysdate AND (csst.xpir_dt IS NULL OR csst.xpir_dt > sysdate) AND casd.case_key = csst.case_key AND   csst.case_stat_cd in ('07', 'Z1') AND   csst.rec_stat_cd = '0'  --[0] = Live record AND   fls_fatum.get_scheme_planType(  casd.cont_no) not in ('DB', 'IND')",});    
+        query:
+          "SELECT casd.cont_no,casd.plan_nm, casd.pr_case_no relnr, fls_fatum.get_scheme_planType(casd.cont_no) PlanType, fls_fatum.get_scheme_status(casd.cont_no) scheme_status, fls_fatum.get_scheme_branche(casd.case_key, sysdate) branche from case_data casd,case_statuses csst where 1=1 AND csst.eff_dt <= sysdate AND (csst.xpir_dt IS NULL OR csst.xpir_dt > sysdate) AND casd.case_key = csst.case_key AND   csst.case_stat_cd in ('07', 'Z1') AND   csst.rec_stat_cd = '0'  --[0] = Live record AND   fls_fatum.get_scheme_planType(  casd.cont_no) not in ('DB', 'IND')",
+      });
       // console.log(resultcomp.data.data.length);
       const total = resultmem.data.data.length + resultcomp.data.data.length;
 
@@ -753,7 +755,7 @@ app.post("/get_info_from_compass", async (req, res) => {
         wg: resultcomp.data.data.length.toLocaleString(),
         t: total.toLocaleString(),
         datawn: resultmem.data.data,
-        datawg: resultcomp.data.data
+        datawg: resultcomp.data.data,
       });
     } catch (error) {
       console.error("Error connecting to the database:", error);
@@ -789,7 +791,7 @@ app.post("/get_info_from_compass", async (req, res) => {
         wn: resultmem.data.data.length.toLocaleString(),
         wg: resultcomp.data.data.length.toLocaleString(),
         datawn: resultmem.data.data,
-        datawg: resultcomp.data.data
+        datawg: resultcomp.data.data,
       });
     } catch (error) {
       console.error("Error connecting to the database:", error);
@@ -799,7 +801,7 @@ app.post("/get_info_from_compass", async (req, res) => {
 });
 
 app.post("/send_to_api", async (req, res) => {
-  const { jresult, username , filename,} = req.body;
+  const { jresult, username, filename } = req.body;
   const json_data = JSON.parse(jresult);
   var gnummer = json_data.Employer;
   var amanummer = json_data.data.length;
@@ -941,35 +943,83 @@ app.post("/send_to_api", async (req, res) => {
   //send json to API
   async function getTokenAndSendRequest(output) {
     try {
-      // First POST request to get the token with basic auth
-      const auth = {
-        username: "h3tMbOEy-iA305q-H7muYg..",
-        password: "PggJQEGXFwMvgDEJtMUQ0w..",
-      };
+      // Create the https agent
+      const agent = new https.Agent({
+        rejectUnauthorized: false,
+      });
+
+      // Prepare the request body as URLSearchParams
+      const data = new URLSearchParams();
+      data.append("grant_type", "client_credentials");
+      data.append("user", process.env.USERNAME_API_PRD);
+      data.append("secret", process.env.PASSWORD_API_PRD);
 
       const tokenResponse = await axios.post(
-        "http://200.16.93.41:8080/portal/ptl/oauth/token",
-        qs.stringify({
-          grant_type: "client_credentials",
-        }),
+        process.env.API_URL_TOKEN_PRD,
+        data, // Pass the encoded data
         {
-          auth, // Basic authentication
+          auth: {
+            username: process.env.USERNAME_API_PRD, 
+            password: process.env.PASSWORD_API_PRD,
+          },
           headers: {
             "Content-Type": "application/x-www-form-urlencoded",
           },
+          httpsAgent: agent,
         }
       );
 
-      // Extract the token from the response
+      // console.log("Token Response:", tokenResponse.data);
+      // First POST request to get the token with basic auth
+      // const auth = {
+      //   user: "gCnTwNeo0b36GTrth2eJxw..",
+      //   secret: "ONr8lB_Ber26nsnEqgvS0Q..",
+      //   grant_type: "client_credentials",
+      // };
+
+      // const agent = new https.Agent({
+      //   rejectUnauthorized: false,
+      // });
+
+      // const tokenResponse = await axios.post(
+      //   "https://pension-cw-01.myguardiangroup.cw:9090/portal/ptl/oauth/token",
+      //   {
+      //     // auth,
+      //     // headers: {
+      //     //   "Content-Type": "application/x-www-form-urlencoded",
+      //     // },
+      //     user: "gCnTwNeo0b36GTrth2eJxw..",
+      //     secret: "ONr8lB_Ber26nsnEqgvS0Q..",
+      //     grant_type: "client_credentials",
+      //   },
+      //   {
+      //     auth: {
+      //       username: "gCnTwNeo0b36GTrth2eJxw..", // Your Basic Auth username
+      //       password: "ONr8lB_Ber26nsnEqgvS0Q..", // Your Basic Auth password
+      //     },
+      //     headers: {
+      //       'Content-Type': 'application/x-www-form-urlencoded', // Important for POST data
+      //     },
+      //   },
+      //   { httpsAgent: agent }
+      // );
+
+      // const tokenResponse = await axios.post('https://200.16.93.40:9090/portal/ptl/oauth/token', {
+      //   user: 'gCnTwNeo0b36GTrth2eJxw..',
+      //   secret: 'ONr8lB_Ber26nsnEqgvS0Q..',
+      //   grant_type: 'client_credentials',
+      // },{ httpsAgent: agent });
+
+      // console.log(tokenResponse.data);
+
       const token = tokenResponse.data.access_token;
-      console.log("Token received:", token);
 
       const response = await axios.post(
-        "http://200.16.93.41:8080/portal/ptl/inpension/transaction", // Replace with actual endpoint
+        process.env.API_URL_TRANSACTION_PRD,
         output,
         {
           headers: {
-            Authorization: `Bearer ${token}`, // Add token in Authorization header
+            Authorization: `Bearer ${token}`,
             "Content-Type": "application/json",
           },
         }
@@ -978,6 +1028,9 @@ app.post("/send_to_api", async (req, res) => {
       store_data(gnummer, username, "", totalamount, "Koopsom");
       store_koopsom_action(gnummer, username, filename, totalamount, amanummer);
     } catch (error) {
+      // console.error(
+      //   error.response.data
+      // );
       console.error(
         "Error:",
         error.response ? error.response.data : error.message
@@ -986,8 +1039,8 @@ app.post("/send_to_api", async (req, res) => {
   }
 });
 
-app.post("/check_if_exists", async (req,res) =>{
-  const {jresult, anummers, total_amount, filename} = req.body;
+app.post("/check_if_exists", async (req, res) => {
+  const { jresult, anummers, total_amount, filename } = req.body;
 
   try {
     const pool = getPool();
@@ -1007,7 +1060,6 @@ app.post("/check_if_exists", async (req,res) =>{
     console.error("Error executing query", err);
     res.status(500).json({ message: "Internal server error" });
   }
-
 });
 
 function moveFiles(srcFilePath, destDirPath, fileName) {
@@ -1131,7 +1183,13 @@ async function store_data(info, name_u, type, Aamount, action) {
     res.status(500).json({ message: "Internal server error" });
   }
 }
-async function store_koopsom_action(gnummer, uname, filename, tamount, amount_a) {
+async function store_koopsom_action(
+  gnummer,
+  uname,
+  filename,
+  tamount,
+  amount_a
+) {
   // console.log(gnummer, uname, filename, tamount, amount_a)
   try {
     const pool = getPool();
@@ -2059,7 +2117,7 @@ function send_onboard_mail(user) {
 app.use(require("./routes"));
 app.use(express.static(path.join(__dirname, "public")));
 
-app.set("port", process.env.PORT || 8086);
+app.set("port", process.env.PORT || 8088);
 
 server.listen(app.get("port"), () => {
   console.log("server on port", app.get("port"));
