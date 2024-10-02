@@ -30,6 +30,7 @@ async function get_data(cou) {
   }).then((res) => res.json());
   if (result.status == "202") {
     var result_data = result.data;
+    console.log(result_data);
     $("#tbl_user").DataTable({
       data: result_data,
       columns: [
@@ -37,6 +38,7 @@ async function get_data(cou) {
         { data: "firstname" },
         { data: "lastname" },
         { data: "email" },
+        { data: "auth_level" },
       ],
     });
     var userDropdown = document.getElementById("select_dropdown");
