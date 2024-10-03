@@ -1402,7 +1402,7 @@ function send_email_new_cred(email, name, username, password) {
                                                                             Username: <strong>${username}</strong>        Password: <strong>${password}</strong>
                                                                         </p>
                                                                         <p style="font-size: 16px;margin-top:20px;margin-bottom:0;line-height: 25px;">
-                                                                           Web-portal url: http://cwftmwebdev01.ghl.int:8086/
+                                                                           Web-portal url: http://ggf-app.ghl.int/ecopension
                                                                         </p>
                                                                     </div>
                                                                 </td>
@@ -1729,7 +1729,7 @@ function send_reseted_mail(new_p, mail) {
                                                                             Password: <strong>${new_p}</strong>
                                                                         </p>
                                                                         <p style="font-size: 16px;margin-top:20px;margin-bottom:0;line-height: 25px;">
-                                                                           Web-portal url: 
+                                                                           Web-portal url: http://ggf-app.ghl.int/ecopension
                                                                         </p>
                                                                     </div>
                                                                 </td>
@@ -2117,7 +2117,7 @@ function send_onboard_mail(user) {
 app.use(require("./routes"));
 app.use(express.static(path.join(__dirname, "public")));
 
-app.set("port", process.env.PORT || 8086);
+app.set("port", process.env.PORT || 8088);
 
 server.listen(app.get("port"), () => {
   console.log("server on port", app.get("port"));
