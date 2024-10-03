@@ -26,7 +26,6 @@ document.getElementById("excelinput").addEventListener("change", function (e) {
 
     // Convert the sheet to an array of arrays (header: 1 returns arrays of each row)
     sheetData = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
-    console.log(sheetData);
     const row1 = sheetData[0] || [];
     const row3 = sheetData[2] || [];
 
@@ -70,8 +69,7 @@ document.getElementById("excelinput").addEventListener("change", function (e) {
         msg.style.color = "white";
         msg.innerText = resultMessage;
       }
-    }
-    // console.log(resultMessage);
+    };
   };
 
   reader.readAsArrayBuffer(file);

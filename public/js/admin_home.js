@@ -20,7 +20,6 @@ async function compass_info(count) {
     body: JSON.stringify({ count }),
   }).then((res) => res.json());
   wndata = result.datawn;
-  console.log(result.datawg);
   document.getElementById("wnnum").innerText = result.wn;
   document.getElementById("wgnum").innerText = result.wg;
   // document.getElementById("wtotal").innerText = result.t;
@@ -44,7 +43,6 @@ async function get_data(cou) {
     body: JSON.stringify({ cou }),
   }).then((res) => res.json());
   var result_data = result.data;
-  console.log(result_data.length);
   document.getElementById("useramount").innerText = result_data.length;
 }
 
