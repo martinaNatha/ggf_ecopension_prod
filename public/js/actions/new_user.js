@@ -3,7 +3,6 @@ var country;
   var tokenEncrypt = sessionStorage.getItem("tokenusers");
   var tokenUser = JSON.parse(tokenEncrypt);
   country = tokenUser.country;
-  console.log(country)
   if(country == 'Curacao' && tokenUser.username == 'admineco'){
     get_data("");
   }else if(country == 'Curacao' && tokenUser.username == 'adminecocur'){
@@ -30,7 +29,6 @@ async function get_data(cou) {
   }).then((res) => res.json());
   if (result.status == "202") {
     var result_data = result.data;
-    console.log(result_data);
     $("#tbl_user").DataTable({
       data: result_data,
       columns: [
