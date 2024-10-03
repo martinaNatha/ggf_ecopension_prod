@@ -197,6 +197,6 @@ async function send_data() {
     box.style.opacity= "1";
     setTimeout(function () {
         window.location.reload();
-      }, 5000);
+      }, 3000);
   }
 }
