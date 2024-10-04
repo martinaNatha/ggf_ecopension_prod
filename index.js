@@ -810,7 +810,7 @@ app.post("/send_to_api", async (req, res) => {
   //get total amount of all Koopsom
   var totalamount = json_data.data.reduce((total, user) => {
     return total + user["Single Premium"];
-  }, 0);
+  }, 0).toFixed(2);
 
   //get date
   function getFormattedDate() {
@@ -969,49 +969,6 @@ app.post("/send_to_api", async (req, res) => {
         }
       );
 
-      // console.log("Token Response:", tokenResponse.data);
-      // First POST request to get the token with basic auth
-      // const auth = {
-      //   user: "gCnTwNeo0b36GTrth2eJxw..",
-      //   secret: "ONr8lB_Ber26nsnEqgvS0Q..",
-      //   grant_type: "client_credentials",
-      // };
-
-      // const agent = new https.Agent({
-      //   rejectUnauthorized: false,
-      // });
-
-      // const tokenResponse = await axios.post(
-      //   "https://pension-cw-01.myguardiangroup.cw:9090/portal/ptl/oauth/token",
-      //   {
-      //     // auth,
-      //     // headers: {
-      //     //   "Content-Type": "application/x-www-form-urlencoded",
-      //     // },
-      //     user: "gCnTwNeo0b36GTrth2eJxw..",
-      //     secret: "ONr8lB_Ber26nsnEqgvS0Q..",
-      //     grant_type: "client_credentials",
-      //   },
-      //   {
-      //     auth: {
-      //       username: "gCnTwNeo0b36GTrth2eJxw..", // Your Basic Auth username
-      //       password: "ONr8lB_Ber26nsnEqgvS0Q..", // Your Basic Auth password
-      //     },
-      //     headers: {
-      //       'Content-Type': 'application/x-www-form-urlencoded', // Important for POST data
-      //     },
-      //   },
-      //   { httpsAgent: agent }
-      // );
-
-      // const tokenResponse = await axios.post('https://200.16.93.40:9090/portal/ptl/oauth/token', {
-      //   user: 'gCnTwNeo0b36GTrth2eJxw..',
-      //   secret: 'ONr8lB_Ber26nsnEqgvS0Q..',
-      //   grant_type: 'client_credentials',
-      // },{ httpsAgent: agent });
-
-      // console.log(tokenResponse.data);
-
       const token = tokenResponse.data.access_token;
 
       const response = await axios.post(
@@ -1022,15 +979,13 @@ app.post("/send_to_api", async (req, res) => {
             Authorization: `Bearer ${token}`,
             "Content-Type": "application/json",
           },
+          httpsAgent: agent,
         }
       );
       res.json({ status: "202", data: response.data });
       store_data(gnummer, username, "", totalamount, "Koopsom");
       store_koopsom_action(gnummer, username, filename, totalamount, amanummer);
     } catch (error) {
-      // console.error(
-      //   error.response.data
-      // );
       console.error(
         "Error:",
         error.response ? error.response.data : error.message
@@ -1041,21 +996,85 @@ app.post("/send_to_api", async (req, res) => {
 
 app.post("/check_if_exists", async (req, res) => {
   const { jresult, anummers, total_amount, filename } = req.body;
+  var datenow;
+  function getFormattedDate() {
+    const now = new Date();
 
+    const day = String(now.getDate()).padStart(2, "0");
+    const month = String(now.getMonth() + 1).padStart(2, "0");
+    const year = now.getFullYear();
+    datenow = `${year}-${month}-${day}`;
+  }
+  getFormattedDate();
   try {
     const pool = getPool();
     const request = pool.request();
 
     // Add parameters to the request
-    request.input("gnumber", sql.VarChar, jresult);
+    request.input("daterun", sql.VarChar, datenow);
+    request.input("gnumber", sql.VarChar, JSON.parse(jresult).Employer);
     request.input("amount_anumbers", sql.VarChar, anummers.toString()); // Adjust type if needed
     request.input("total_amount", sql.VarChar, total_amount.toString());
     request.input("filename", sql.VarChar, filename);
 
+    // const result = await request.query(
+    //   `INSERT INTO user_action_logs (username, gnumber, amount_anumbers, total_amount, filename)
+    //    VALUES (@name, @gnumber, @amount_anumbers, @total_amount, @filename)`
+    // );
     const result = await request.query(
-      `INSERT INTO user_action_logs (users, amount_anumber, type, actions, data) 
-       VALUES (@name_u, @Aamount, @type, @action, @info)`
+      `SELECT * 
+      FROM koopsome_log
+      WHERE daterun = @daterun
+      AND gnumber = @gnumber 
+      AND amount_anumbers = @amount_anumbers 
+      AND total_amount = @total_amount 
+      AND filename = @filename;`
     );
+    // console.log(result.recordset.length);
+    if (result.recordset.length > 0) {
+      check_if_exist_in_compass(jresult, "1");
+    } else {
+      check_if_exist_in_compass(jresult, "0");
+      // console.log(response)
+    }
+
+    async function check_if_exist_in_compass(jresult, veri) {
+      // console.log(JSON.parse(jresult).data);
+      // WHERE CD.CONT_NO = ${JSON.parse(jresult).Employer} and MB.MBR_NO IN ('A155004','A155009','A155010')
+      var anumercheck = JSON.parse(jresult).data.length;
+      const participantNumbers = JSON.parse(jresult).data.map(
+        (item) => item["Participant Number"]
+      );
+      const anums = participantNumbers.map((item) => `'${item}'`).join(", ");
+      try {
+        const resultmem = await axios.post(process.env.API_PRD, {
+          query: `SELECT * FROM PORTAL.PTL_MEMBERS MB inner join PORTAL.PTL_CASE_DATA CD on MB.ORG_NAMEID = CD.ORG_NAMEID WHERE CD.CONT_NO = '${
+            JSON.parse(jresult).Employer
+          }' and MB.MBR_NO IN (${anums}) `,
+        });
+        if (anumercheck == resultmem.data.data.length) {
+          if (veri == 1) {
+            res.json({ status: "already stored", data: resultmem.data.data });
+          } else {
+            res.json({ status: "new" });
+          }
+        } else {
+          var arrresp = [];
+          var arrAnummers = [];
+          resultmem.data.data.forEach(function (number) {
+            arrAnummers.push(number.MBR_NO)
+          });
+          for (let i = 0; i < participantNumbers.length; i++) {
+            if (participantNumbers[i] !== arrAnummers[i]) {
+              arrresp.push(participantNumbers[i]);
+            }
+          }
+          res.json({ status: "not exist" , data:arrresp});
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    }
   } catch (err) {
     console.error("Error executing query", err);
     res.status(500).json({ message: "Internal server error" });
